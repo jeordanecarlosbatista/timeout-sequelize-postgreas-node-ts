@@ -1,0 +1,27 @@
+version: '3.1'
+
+services:
+
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=test
+      - POSTGRES_PASSWORD=test
+      - POSTGRES_DB=timeout-sequelize
+    volumes:
+      - ./sql/create-function.sql:/docker-entrypoint-initdb.d/create-function.sql
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+  app:
+    image: node:alpine
+    container_name: sequelize-postgres-node-ts
+    working_dir: /app/sequelize-postgres-node-ts
+    volumes:
+      - .:/app/sequelize-postgres-node-ts
+    command: npm test
